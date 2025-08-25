@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="es" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Sistema de Gestión de Horas para Profesores - Interfaz sofisticada para la administración de horarios académicos" />
+    <meta name="theme-color" content="#000000" />
+    
+    <!-- Preload de fuentes críticas -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Estilos base para prevenir FOUC -->
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      html {
+        background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+        color: white;
+        font-family: system-ui, -apple-system, sans-serif;
+      }
+      
+      body {
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+      
+      #root {
+        min-height: 100vh;
+      }
+      
+      /* Loading spinner inicial */
+      .initial-loading {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+        z-index: 9999;
+      }
+      
+      .loading-spinner {
+        width: 48px;
+        height: 48px;
+        border: 4px solid rgba(59, 130, 246, 0.3);
+        border-top: 4px solid #3b82f6;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      .loading-text {
+        margin-top: 16px;
+        font-size: 14px;
+        color: #9ca3af;
+        font-weight: 500;
+      }
+    </style>
+    
+    <title>Sistema de Gestión de Horas</title>
+  </head>
+  <body>
+    <!-- Loading inicial -->
+    <div id="initial-loading" class="initial-loading">
+      <div>
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Cargando Sistema de Gestión...</div>
+      </div>
+    </div>
+    
+    <div id="root"></div>
+    
+    <script>
+      // Remover loading inicial cuando la app esté lista
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const loading = document.getElementById('initial-loading');
+          if (loading) {
+            loading.style.opacity = '0';
+            setTimeout(() => loading.remove(), 300);
+          }
+        }, 800);
+      });
+      
+      // Configuración de tema inicial
+      if (!document.documentElement.classList.contains('dark')) {
+        document.documentElement.classList.add('dark');
+      }
+    </script>
+    
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
