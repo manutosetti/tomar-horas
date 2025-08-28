@@ -64,12 +64,52 @@ const LoginPage = () => {
     });
   };
 
+  // Función para usar credenciales de demo
+  const useDemo = (role) => {
+    const credentials = {
+      manager: {
+        email: 'manager@sistema.com',
+        password: 'manager123'
+      },
+      professor: {
+        email: 'profesor@sistema.com',
+        password: 'profesor123'
+      }
+    };
+
+    setFormData(prev => ({
+      ...prev,
+      ...credentials[role]
+    }));
+  };
+
   return (
     <div className="min-h-screen bg-gradient-dark flex items-center justify-center p-4 relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-blue-600/20 via-purple-600/20 to-transparent rounded-full blur-3xl" />
         <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-purple-600/20 via-blue-600/20 to-transparent rounded-full blur-3xl" />
+        
+        {/* Floating particles */}
+        {Array.from({ length: 20 }, (_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 bg-blue-400/30 rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, -30, 0],
+              opacity: [0.3, 1, 0.3],
+            }}
+            transition={{
+              duration: 3 + Math.random() * 2,
+              repeat: Infinity,
+              delay: Math.random() * 2,
+            }}
+          />
+        ))}
       </div>
 
       <div className="relative w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 items-center">
@@ -82,9 +122,20 @@ const LoginPage = () => {
         >
           <div className="space-y-6">
             <div className="flex items-center space-x-4">
-              <div className="w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center">
+              <motion.div 
+                className="w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center"
+                animate={{ 
+                  rotate: [0, 5, -5, 0],
+                  scale: [1, 1.05, 1]
+                }}
+                transition={{ 
+                  duration: 4, 
+                  repeat: Infinity, 
+                  repeatType: "reverse" 
+                }}
+              >
                 <Clock className="w-8 h-8 text-white" />
-              </div>
+              </motion.div>
               <div>
                 <h1 className="text-4xl font-bold text-gradient">
                   Sistema de Gestión de Horas
@@ -96,37 +147,52 @@ const LoginPage = () => {
             </div>
             
             <div className="space-y-4 pl-4">
-              <div className="flex items-center space-x-3">
-                <Users className="w-6 h-6 text-blue-400" />
-                <span className="text-gray-300">Gestión completa de profesores</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Clock className="w-6 h-6 text-purple-400" />
-                <span className="text-gray-300">Asignación inteligente de horarios</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="w-6 h-6 bg-gradient-primary rounded flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">★</span>
-                </div>
-                <span className="text-gray-300">Sistema de puntuación avanzado</span>
-              </div>
+              {[
+                { icon: Users, text: 'Gestión completa de profesores', color: 'text-blue-400' },
+                { icon: Clock, text: 'Asignación inteligente de horarios', color: 'text-purple-400' },
+                { 
+                  icon: () => (
+                    <div className="w-6 h-6 bg-gradient-primary rounded flex items-center justify-center">
+                      <span className="text-white text-xs font-bold">★</span>
+                    </div>
+                  ), 
+                  text: 'Sistema de puntuación avanzado', 
+                  color: 'text-yellow-400' 
+                }
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  className="flex items-center space-x-3"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 + index * 0.1 }}
+                >
+                  <item.icon className={`w-6 h-6 ${item.color}`} />
+                  <span className="text-gray-300">{item.text}</span>
+                </motion.div>
+              ))}
             </div>
           </div>
 
           {/* Stats */}
           <div className="grid grid-cols-3 gap-4">
-            <div className="glass p-4 rounded-xl text-center">
-              <div className="text-2xl font-bold text-gradient">150+</div>
-              <div className="text-sm text-gray-400">Profesores</div>
-            </div>
-            <div className="glass p-4 rounded-xl text-center">
-              <div className="text-2xl font-bold text-gradient">300+</div>
-              <div className="text-sm text-gray-400">Materias</div>
-            </div>
-            <div className="glass p-4 rounded-xl text-center">
-              <div className="text-2xl font-bold text-gradient">1200+</div>
-              <div className="text-sm text-gray-400">Horas</div>
-            </div>
+            {[
+              { value: '150+', label: 'Profesores' },
+              { value: '300+', label: 'Materias' },
+              { value: '1200+', label: 'Horas' }
+            ].map((stat, index) => (
+              <motion.div
+                key={index}
+                className="glass p-4 rounded-xl text-center hover-lift"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 + index * 0.1 }}
+                whileHover={{ scale: 1.05 }}
+              >
+                <div className="text-2xl font-bold text-gradient">{stat.value}</div>
+                <div className="text-sm text-gray-400">{stat.label}</div>
+              </motion.div>
+            ))}
           </div>
         </motion.div>
 
@@ -137,11 +203,15 @@ const LoginPage = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="w-full"
         >
-          <Card className="max-w-md mx-auto p-8">
+          <Card className="max-w-md mx-auto p-8 glass-strong">
             <div className="text-center mb-8">
-              <div className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center mx-auto mb-4">
+              <motion.div 
+                className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center mx-auto mb-4"
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.5 }}
+              >
                 <Lock className="w-6 h-6 text-white" />
-              </div>
+              </motion.div>
               <h2 className="text-2xl font-bold text-white mb-2">
                 {isRegister ? 'Crear Cuenta' : 'Iniciar Sesión'}
               </h2>
@@ -155,18 +225,42 @@ const LoginPage = () => {
 
             {/* Demo Credentials */}
             {!isRegister && (
-              <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-                <p className="text-sm text-blue-300 mb-2 font-medium">Credenciales de prueba:</p>
-                <div className="text-xs text-gray-300 space-y-1">
-                  <div><strong>Manager:</strong> manager@sistema.com / manager123</div>
-                  <div><strong>Profesor:</strong> profesor@sistema.com / profesor123</div>
+              <motion.div 
+                className="mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                <p className="text-sm text-blue-300 mb-3 font-medium">Credenciales de prueba:</p>
+                <div className="space-y-2">
+                  <button
+                    type="button"
+                    onClick={() => useDemo('manager')}
+                    className="w-full text-left p-2 rounded bg-blue-500/10 hover:bg-blue-500/20 transition-colors"
+                  >
+                    <div className="text-xs text-white font-medium">👨‍💼 Manager</div>
+                    <div className="text-xs text-gray-300">manager@sistema.com / manager123</div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => useDemo('professor')}
+                    className="w-full text-left p-2 rounded bg-purple-500/10 hover:bg-purple-500/20 transition-colors"
+                  >
+                    <div className="text-xs text-white font-medium">🎓 Profesor</div>
+                    <div className="text-xs text-gray-300">profesor@sistema.com / profesor123</div>
+                  </button>
                 </div>
-              </div>
+              </motion.div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
               {isRegister && (
-                <>
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="space-y-4"
+                >
                   <div className="grid grid-cols-2 gap-4">
                     <Input
                       label="Nombre"
@@ -212,7 +306,7 @@ const LoginPage = () => {
                     onChange={handleInputChange}
                     placeholder="+54 280 123-4567"
                   />
-                </>
+                </motion.div>
               )}
 
               <Input
@@ -237,5 +331,48 @@ const LoginPage = () => {
                 />
                 <button
                   type="button"
-                  className="absolute right-3 top-9 text-gray-400 hover:text-white"
-                  onClick={() =>
+                  className="absolute right-3 top-9 text-gray-400 hover:text-white transition-colors"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
+
+              <Button
+                type="submit"
+                variant="primary"
+                size="lg"
+                loading={loading}
+                className="w-full"
+              >
+                {isRegister ? 'Crear Cuenta' : 'Iniciar Sesión'}
+              </Button>
+            </form>
+
+            <div className="mt-6 text-center">
+              <button
+                type="button"
+                onClick={switchMode}
+                className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+              >
+                {isRegister 
+                  ? '¿Ya tienes cuenta? Inicia sesión'
+                  : '¿No tienes cuenta? Regístrate'
+                }
+              </button>
+            </div>
+
+            {/* Footer */}
+            <div className="mt-8 pt-6 border-t border-white/10 text-center">
+              <p className="text-xs text-gray-500">
+                Al continuar, aceptas nuestros términos de servicio y política de privacidad
+              </p>
+            </div>
+          </Card>
+        </motion.div>
+      </div>
+    </div>
+  );
+};
+
+export default LoginPage;
